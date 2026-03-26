@@ -525,13 +525,32 @@ def build_parser() -> argparse.ArgumentParser:
     disp = sub.add_parser("dispatch", help="Dispatch queued tasks")
     disp.add_argument("--dry-run", action="store_true")
     disp.add_argument("--lease-owner", default="dispatcher")
-    
+
     ingest_p = sub.add_parser("ingest", help="Ingest agent result")
-    ingest_p.add_argument("--result", required=True)
-    
-    handoff_p = sub.add_parser("handoff", help="Handoff runtime")
-    handoff_p.add_argument("subcommand", nargs="?")
-    
+    ingest_p.add_argument("--result", required=True, help="JSON string or @file.json")
+
+    handoff = sub.add_parser("handoff", help="Handoff runtime")
+    handoff_sub = handoff.add_subparsers(dest="handoff_command", required=True)
+
+    handoff_create = handoff_sub.add_parser("create", help="Create handoff")
+    handoff_create.add_argument("--task-id", required=True)
+    handoff_create.add_argument("--mode", required=True, choices=["delegate", "transfer", "review", "escalate"])
+    handoff_create.add_argument("--from", dest="from_agent", required=True)
+    handoff_create.add_argument("--to", dest="to_agent", required=True)
+    handoff_create.add_argument("--child-task-id")
+
+    handoff_accept = handoff_sub.add_parser("accept", help="Accept handoff")
+    handoff_accept.add_argument("--handoff-id", required=True)
+    handoff_accept.add_argument("--actor", required=True)
+
+    handoff_reject = handoff_sub.add_parser("reject", help="Reject handoff")
+    handoff_reject.add_argument("--handoff-id", required=True)
+    handoff_reject.add_argument("--actor", required=True)
+    handoff_reject.add_argument("--reason", required=True)
+
+    handoff_list = handoff_sub.add_parser("list", help="List pending handoffs")
+    handoff_list.add_argument("--agent", default=None)
+
     sup = sub.add_parser("supervisor", help="Supervisor checks")
     sup.add_argument("--status-card", action="store_true")
     sup.add_argument("--check-stale", action="store_true")
@@ -631,13 +650,41 @@ def main(argv: Iterable[str] | None = None) -> None:
         return
 
     if args.command == "handoff":
-        from openclaw_task_runtime.handoff import run_handoff
-        run_handoff()
-        return
+        from openclaw_task_runtime.handoff import HandoffRequest, HandoffRuntime
+        handoff_runtime = HandoffRuntime()
+        if args.handoff_command == "create":
+            result = handoff_runtime.create_handoff(HandoffRequest(
+                task_id=args.task_id,
+                mode=args.mode,
+                from_agent=args.from_agent,
+                to_agent=args.to_agent,
+                child_task_id=args.child_task_id,
+            ))
+            print(json.dumps(result, ensure_ascii=False, indent=2))
+            return
+        if args.handoff_command == "accept":
+            print(json.dumps(handoff_runtime.accept_handoff(args.handoff_id, args.actor), ensure_ascii=False, indent=2))
+            return
+        if args.handoff_command == "reject":
+            print(json.dumps(handoff_runtime.reject_handoff(args.handoff_id, args.actor, args.reason), ensure_ascii=False, indent=2))
+            return
+        if args.handoff_command == "list":
+            print(json.dumps({"handoffs": handoff_runtime.list_pending_handoffs(args.agent)}, ensure_ascii=False, indent=2))
+            return
 
     if args.command == "supervisor":
-        from openclaw_task_runtime.supervisor import run_supervisor
-        run_supervisor()
+        from openclaw_task_runtime.supervisor import Supervisor
+        sup = Supervisor()
+        if args.status_card:
+            print(json.dumps(sup.generate_status_card(), ensure_ascii=False, indent=2))
+            return
+        if args.check_stale:
+            print(json.dumps({"stale": [d.__dict__ for d in sup.check_stale_tasks()]}, ensure_ascii=False, indent=2))
+            return
+        if args.check_blocked:
+            print(json.dumps({"blocked": [d.__dict__ for d in sup.check_blocked_tasks()]}, ensure_ascii=False, indent=2))
+            return
+        print(json.dumps(sup.supervise(), ensure_ascii=False, indent=2))
         return
 
     parser.error(f"unsupported command: {args.command}")
