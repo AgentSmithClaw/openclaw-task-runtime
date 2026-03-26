@@ -1,0 +1,30 @@
+lifecycle_state_machine:
+  states:
+    - queued
+    - claimed
+    - doing
+    - waiting_input
+    - waiting_external
+    - blocked
+    - done
+    - failed
+  freshness_overlay:
+    - fresh
+    - stale
+
+terminal_states:
+  - done
+  - failed
+
+allowed_handoff_modes:
+  - delegate
+  - transfer
+  - review
+  - escalate
+
+definitions:
+  waiting_input: requires explicit human input or approval and has a defined resume entry
+  waiting_external: waits for a known external event, dependency, webhook or timer
+  blocked: no auto-resume path; requires arbitration, resources or manual intervention
+  done: all hard dependencies closed, required artifacts present, final summary submitted, reviewer passed if required
+  failed: unrecoverable error or retries exhausted

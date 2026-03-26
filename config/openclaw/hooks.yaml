@@ -1,0 +1,24 @@
+hooks:
+  /status:
+    action: query_status_snapshot
+    source_of_truth: task_db_or_temporal_query
+    returns:
+      - task overview
+      - blockers
+      - artifacts
+      - next wakeup
+  /approve:
+    action: emit_approval_event
+    payload: { task_id: string, kind: string, approved: boolean }
+  /resume:
+    action: emit_manual_resume_event
+    payload: { task_id: string, note: string }
+  /block:
+    action: force_block
+    payload: { task_id: string, reason: string }
+  ci_callback:
+    action: external_webhook_received
+    payload: { task_id: string, build_id: string, status: string }
+  dependency_ready:
+    action: dependency_resolved
+    payload: { task_id: string, dependency_task_id: string }

@@ -1,0 +1,28 @@
+id: laforge
+role: backend / AI / infra delivery worker
+owns:
+  - backend
+reads:
+  - feature_list.json
+  - handoffs/spock__laforge__*.json
+  - progress.md
+  - acceptance.json
+writes:
+  - artifacts/backend/*
+  - states/laforge.json
+  - progress.md
+  - feature_list.json.claimed_feature_only
+bridges:
+  - external_webhook_to_temporal_signal
+  - ci_result_to_artifact_and_status_evidence
+returns:
+  decision:
+    - progress
+    - wait_input
+    - wait_external
+    - blocked
+    - done
+    - failed
+forbidden:
+  - marking_ui_features_done
+  - modifying_release_verdict

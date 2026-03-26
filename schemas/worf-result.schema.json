@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "worf-result.schema.json",
+  "allOf": [
+    {
+      "$ref": "./agent_result.schema.json"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "agent": {
+          "const": "worf"
+        },
+        "decision": {
+          "enum": [
+            "progress",
+            "blocked",
+            "done",
+            "failed"
+          ]
+        },
+        "qaVerdict": {
+          "type": "object",
+          "required": [
+            "verdict",
+            "passedChecks",
+            "failedChecks",
+            "riskLevel"
+          ],
+          "properties": {
+            "verdict": {
+              "type": "string",
+              "enum": [
+                "pass",
+                "fail",
+                "conditional_pass"
+              ]
+            },
+            "passedChecks": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "failedChecks": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "riskLevel": {
+              "type": "string",
+              "enum": [
+                "low",
+                "medium",
+                "high"
+              ]
+            },
+            "rollbackAdvice": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "required": [
+        "agent",
+        "decision",
+        "qaVerdict"
+      ]
+    }
+  ]
+}

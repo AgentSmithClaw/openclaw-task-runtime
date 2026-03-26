@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sulu-result.schema.json",
+  "allOf": [
+    {
+      "$ref": "./agent_result.schema.json"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "agent": {
+          "const": "sulu"
+        },
+        "decision": {
+          "enum": [
+            "progress",
+            "wait_input",
+            "wait_external",
+            "blocked",
+            "done",
+            "failed"
+          ]
+        },
+        "featureId": {
+          "type": "string",
+          "pattern": "^FE-"
+        },
+        "delivery": {
+          "type": "object",
+          "required": [
+            "changedFiles",
+            "testsRun"
+          ],
+          "properties": {
+            "changedFiles": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "testsRun": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "screenshotPaths": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "agent",
+        "decision",
+        "featureId",
+        "delivery"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+stale_rules:
+  queued:
+    stale_after_minutes: 10
+  claimed:
+    stale_when_lease_expired: true
+  doing:
+    stale_after_no_progress_minutes: 20
+  waiting_external:
+    stale_when_deadline_exceeded: true
+  waiting_input:
+    stale_after_hours: 24
+
+escalation:
+  blocked_over_minutes: 30
+  blocked_target: picard
+  stale_child_root_target: uhura
+  stale_child_user_notify: true

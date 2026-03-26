@@ -1,0 +1,13 @@
+approval_gates:
+  spec:
+    required_before:
+      - fanout_delivery
+  release:
+    required_before:
+      - close_root_task
+  destructive_actions:
+    require_human_approval: true
+    examples:
+      - rollback_prod
+      - force_close
+      - data_delete

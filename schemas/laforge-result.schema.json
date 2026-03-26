@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "laforge-result.schema.json",
+  "allOf": [
+    {
+      "$ref": "./agent_result.schema.json"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "agent": {
+          "const": "laforge"
+        },
+        "decision": {
+          "enum": [
+            "progress",
+            "wait_input",
+            "wait_external",
+            "blocked",
+            "done",
+            "failed"
+          ]
+        },
+        "featureId": {
+          "type": "string",
+          "pattern": "^BE-"
+        },
+        "backendDelivery": {
+          "type": "object",
+          "required": [
+            "changedFiles",
+            "interfacesTouched"
+          ],
+          "properties": {
+            "changedFiles": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "interfacesTouched": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "ciBuildId": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "required": [
+        "agent",
+        "decision",
+        "featureId",
+        "backendDelivery"
+      ]
+    }
+  ]
+}

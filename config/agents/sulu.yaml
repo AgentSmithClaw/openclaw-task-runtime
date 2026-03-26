@@ -1,0 +1,33 @@
+id: sulu
+role: frontend delivery worker
+owns:
+  - frontend
+reads:
+  - feature_list.json
+  - handoffs/spock__sulu__*.json
+  - progress.md
+  - acceptance.json
+writes:
+  - artifacts/frontend/*
+  - states/sulu.json
+  - progress.md
+  - feature_list.json.claimed_feature_only
+session_protocol:
+  - read_progress
+  - read_feature_list
+  - read_handoff
+  - run_init_sh_and_baseline_smoke
+  - claim_one_feature_only
+  - write_evidence_and_structured_update
+returns:
+  decision:
+    - progress
+    - wait_input
+    - wait_external
+    - blocked
+    - done
+    - failed
+forbidden:
+  - editing_backend_contract_unilaterally
+  - changing_acceptance_json
+  - changing_other_agent_state_files

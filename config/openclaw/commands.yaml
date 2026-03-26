@@ -1,0 +1,13 @@
+commands:
+  - name: /status
+    example: /status EPIC-2026-031
+    maps_to: GetBoard()
+  - name: /approve
+    example: /approve EPIC-2026-031 spec
+    maps_to: approval_received
+  - name: /resume
+    example: /resume T-1003 frontend payload ready
+    maps_to: manual_resume
+  - name: /block
+    example: /block T-1002 waiting db privilege grant
+    maps_to: force_block

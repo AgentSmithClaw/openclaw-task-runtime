@@ -1,0 +1,78 @@
+version: 1
+profile: openclaw-task-control-plane-v1
+
+source_of_truth: task_db
+edge_runtime: openclaw
+target_runtime: temporal
+repo_mode: harness-first
+
+storage:
+  engine: sqlite
+  dsn: data/runtime.db
+  sqlite_wal: true
+  migrate_on_start: true
+
+components:
+  dispatcher:
+    enabled: true
+    poll_interval_seconds: 15
+    lease_minutes: 15
+    claim_batch_size: 10
+    dry_run: false
+  reconciler:
+    enabled: true
+    poll_interval_seconds: 30
+    lease_expiry_recovery: true
+    retry_backoff: true
+    subagent_announce_reconciliation: true
+  rollup:
+    enabled: true
+    immediate_push_on:
+      - queued_to_doing
+      - blocked
+      - stale
+      - done
+      - failed
+    periodic_summary_minutes: 30
+
+dispatch:
+  default_trigger: dispatch
+  openclaw_cli:
+    command: openclaw
+    args_template:
+      - agent
+      - --agent
+      - "{agent_id}"
+      - --message
+      - "{structured_task_prompt}"
+      - --json
+
+commands:
+  require_structured_json: true
+  accepted_transitions:
+    - PROGRESS
+    - HANDOFF
+    - WAIT_INPUT
+    - WAIT_EXTERNAL
+    - BLOCK
+    - DONE
+    - FAIL
+
+scheduler:
+  heartbeat_role: anomaly_scan_only
+  cron_role: precise_wakeup_only
+  cron_tick_seconds: 60
+
+notifications:
+  feishu_as: notification_plane
+  push_channels:
+    - feishu_group
+    - dashboard
+  suppress_when_no_change: true
+
+visibility:
+  output_dir: runtime
+  files:
+    - runtime/dashboard.json
+    - runtime/dashboard.html
+    - runtime/events/%Y-%m-%d.jsonl

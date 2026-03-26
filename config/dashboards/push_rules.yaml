@@ -1,0 +1,22 @@
+push_rules:
+  immediate:
+    - queued_to_doing
+    - blocked
+    - stale
+    - done
+    - failed
+  periodic_minutes: 30
+
+card_fields:
+  - rootTaskId
+  - title
+  - phase
+  - lifecycleState
+  - freshnessState
+  - owner
+  - currentStep
+  - nextAction
+  - lastProgressAt
+  - nextRunAt
+  - topBlocker
+  - latestArtifact

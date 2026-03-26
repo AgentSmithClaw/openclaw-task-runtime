@@ -1,0 +1,21 @@
+task_queues:
+  workflow:
+    - wf.control
+  activities:
+    - act.openclaw.picard
+    - act.openclaw.spock
+    - act.openclaw.sulu
+    - act.openclaw.laforge
+    - act.openclaw.worf
+    - act.openclaw.uhura
+    - act.integration.git
+    - act.integration.ci
+    - act.integration.browser
+    - act.integration.notify
+    - act.integration.projection
+
+why_split:
+  - independent_concurrency_per_role
+  - clear_failure_domains
+  - easier_throttling
+  - clearer_cost_control

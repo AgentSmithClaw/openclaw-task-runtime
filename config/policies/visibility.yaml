@@ -1,0 +1,25 @@
+visibility:
+  user_must_see_fields:
+    - task_id
+    - owner_agent
+    - lifecycle_state
+    - freshness_state
+    - current_step
+    - last_progress_at
+    - next_run_at
+    - blocker
+    - latest_artifact_ref
+
+push_policy:
+  immediate:
+    - queued_to_doing
+    - blocked
+    - stale
+    - done
+    - failed
+  periodic_minutes: 30
+
+feishu_role: notification_panel
+forbidden:
+  - use_group_chat_as_authoritative_state
+  - record_handoff_only_in_chat

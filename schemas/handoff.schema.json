@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "handoff.schema.json",
+  "title": "HandoffContract",
+  "type": "object",
+  "required": [
+    "from",
+    "to",
+    "mode",
+    "featureId",
+    "expectedOutput"
+  ],
+  "properties": {
+    "from": {
+      "type": "string",
+      "enum": [
+        "picard",
+        "spock",
+        "sulu",
+        "laforge",
+        "worf",
+        "uhura"
+      ]
+    },
+    "to": {
+      "type": "string",
+      "enum": [
+        "picard",
+        "spock",
+        "sulu",
+        "laforge",
+        "worf",
+        "uhura"
+      ]
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "delegate",
+        "transfer",
+        "review",
+        "escalate"
+      ]
+    },
+    "featureId": {
+      "type": "string"
+    },
+    "inputArtifacts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "expectedOutput": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "acceptance": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "doNotChange": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "returnTo": {
+      "type": "string",
+      "enum": [
+        "picard",
+        "spock",
+        "sulu",
+        "laforge",
+        "worf",
+        "uhura"
+      ]
+    },
+    "dueAt": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "$defs": {
+    "blocker": {
+      "type": "object",
+      "required": [
+        "kind",
+        "summary",
+        "owner"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "ambiguity",
+            "dependency",
+            "external_system",
+            "permissions",
+            "qa_failure",
+            "contract_mismatch",
+            "infra_failure",
+            "missing_input",
+            "approval_required"
+          ]
+        },
+        "summary": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string",
+          "enum": [
+            "picard",
+            "spock",
+            "sulu",
+            "laforge",
+            "worf",
+            "uhura",
+            "user",
+            "external"
+          ]
+        },
+        "suggestedAction": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

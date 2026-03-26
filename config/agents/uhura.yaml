@@ -1,0 +1,28 @@
+id: uhura
+role: rollup / observability / follow-up / user visibility
+owns:
+  - rollup
+reads:
+  - root_workflow_query_outputs
+  - root.yaml
+  - timeline.jsonl
+  - blockers.json
+  - artifact_indexes
+writes:
+  - reports/dashboard.json
+  - reports/status-card.md
+  - reports/summary.md
+  - states/uhura.json
+returns:
+  decision:
+    - progress
+    - blocked
+    - done
+escalate_when:
+  - stale_threshold_crossed
+  - blocked_beyond_sla
+  - artifact_missing_for_claimed_done
+forbidden:
+  - changing_canonical_lifecycle_state
+  - approving_release
+  - editing_delivery_artifacts

@@ -1,0 +1,17 @@
+lease:
+  default_minutes: 15
+  renew_before_seconds: 60
+  owner_field: lease_owner
+  expiry_field: lease_until
+
+retry:
+  max_retries: 3
+  initial_backoff_seconds: 60
+  multiplier: 2
+  max_backoff_seconds: 1800
+  retryable_states:
+    - failed
+    - blocked
+  non_retryable_errors:
+    - acceptance_conflict
+    - unauthorized_destructive_action

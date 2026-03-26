@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agent-result.schema.json",
+  "title": "AgentResult",
+  "type": "object",
+  "required": [
+    "taskId",
+    "agent",
+    "decision",
+    "summary"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "taskId": {
+      "type": "string"
+    },
+    "agent": {
+      "type": "string",
+      "enum": [
+        "picard",
+        "spock",
+        "sulu",
+        "laforge",
+        "worf",
+        "uhura"
+      ]
+    },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "progress",
+        "wait_input",
+        "wait_external",
+        "blocked",
+        "done",
+        "failed"
+      ]
+    },
+    "summary": {
+      "type": "string"
+    },
+    "currentStep": {
+      "type": "string"
+    },
+    "nextAction": {
+      "type": "string"
+    },
+    "featureId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "kind",
+          "path"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "proof": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "$ref": "handoff.schema.json#/$defs/blocker"
+      }
+    },
+    "handoffs": {
+      "type": "array",
+      "items": {
+        "$ref": "handoff.schema.json"
+      }
+    },
+    "needsSignal": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        null,
+        "approval",
+        "external_ready",
+        "user_clarified",
+        "ci_completed"
+      ]
+    },
+    "statePatch": {
+      "type": "object"
+    }
+  }
+}

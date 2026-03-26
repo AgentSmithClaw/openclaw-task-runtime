@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "task_state.schema.json",
+  "title": "TaskState",
+  "type": "object",
+  "required": [
+    "rootTaskId",
+    "title",
+    "phase",
+    "lifecycleState",
+    "freshnessState",
+    "owner",
+    "currentStep",
+    "nextAction",
+    "childStates",
+    "artifacts"
+  ],
+  "properties": {
+    "rootTaskId": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "phase": {
+      "type": "string",
+      "enum": [
+        "intake",
+        "spec",
+        "delivery",
+        "qa",
+        "rollup",
+        "release",
+        "closed"
+      ]
+    },
+    "lifecycleState": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "claimed",
+        "doing",
+        "waiting_input",
+        "waiting_external",
+        "blocked",
+        "done",
+        "failed"
+      ]
+    },
+    "freshnessState": {
+      "type": "string",
+      "enum": [
+        "fresh",
+        "stale"
+      ]
+    },
+    "owner": {
+      "type": "string",
+      "enum": [
+        "picard",
+        "spock",
+        "sulu",
+        "laforge",
+        "worf",
+        "uhura"
+      ]
+    },
+    "currentStep": {
+      "type": "string"
+    },
+    "nextAction": {
+      "type": "string"
+    },
+    "lastProgressAt": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "nextRunAt": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "deadlineAt": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "$ref": "handoff.schema.json#/$defs/blocker"
+      }
+    },
+    "childStates": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "kind",
+          "path"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

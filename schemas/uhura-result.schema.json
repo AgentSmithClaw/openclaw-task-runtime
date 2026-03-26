@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "uhura-result.schema.json",
+  "allOf": [
+    {
+      "$ref": "./agent_result.schema.json"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "agent": {
+          "const": "uhura"
+        },
+        "decision": {
+          "enum": [
+            "progress",
+            "done",
+            "blocked"
+          ]
+        },
+        "projection": {
+          "type": "object",
+          "required": [
+            "dashboardUpdated",
+            "statusCardUpdated"
+          ],
+          "properties": {
+            "dashboardUpdated": {
+              "type": "boolean"
+            },
+            "statusCardUpdated": {
+              "type": "boolean"
+            },
+            "staleDetected": {
+              "type": "boolean"
+            },
+            "blockedDigest": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "agent",
+        "decision",
+        "projection"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+target_topology:
+  root_workflow: EpicWorkflow
+  root_owner: picard
+  child_workflows:
+    - name: SpecWorkflow
+      owner: spock
+      outputs:
+        - spec.md
+        - feature_list.json
+        - acceptance.json
+        - handoff_contracts
+    - name: FrontendWorkflow
+      owner: sulu
+      mode: parallel
+    - name: BackendWorkflow
+      owner: laforge
+      mode: parallel
+    - name: QAWorkflow
+      owner: worf
+      waits_for:
+        - FrontendWorkflow
+        - BackendWorkflow
+    - name: RollupWorkflow
+      owner: uhura
+      mode: background_projection
+
+message_model:
+  signals:
+    - UserClarified
+    - ExternalDependencyReady
+    - CICompleted
+    - ArtifactUploaded
+    - ManualResume
+    - CancelEpic
+  updates:
+    - ApproveScopeChange
+    - ReassignOwner
+    - ExtendDeadline
+    - ForceBlock
+    - ForceClose
+  queries:
+    - GetStatus
+    - GetBoard
+    - GetBlockers
+    - GetArtifacts
+    - GetCurrentPhase
+    - GetWhoOwnsWhat

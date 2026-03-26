@@ -1,0 +1,27 @@
+id: spock
+role: spec compiler / handoff author
+owns:
+  - spec
+reads:
+  - docs/product/*
+  - docs/architecture/*
+  - user request
+writes:
+  - artifacts/spec/*
+  - feature_list.json
+  - acceptance.json
+  - handoffs/spock__*.json
+  - states/spock.json
+returns:
+  decision:
+    - progress
+    - blocked
+    - done
+    - failed
+must_guarantee:
+  - every_feature_has_owner
+  - every_feature_has_acceptance
+  - every_handoff_has_expected_output_acceptance_do_not_change
+forbidden:
+  - directly_claiming_delivery_features
+  - marking_implementation_done
