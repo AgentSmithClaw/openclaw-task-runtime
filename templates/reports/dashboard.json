@@ -1,0 +1,26 @@
+{
+  "rootTaskId": "EPIC-YYYY-NNN",
+  "title": "示例 Epic",
+  "phase": "delivery",
+  "lifecycleState": "doing",
+  "freshnessState": "fresh",
+  "owner": "picard",
+  "currentStep": "frontend/backend parallel delivery",
+  "nextAction": "wait CI + integration proof",
+  "lastProgressAt": "2026-03-26T16:20:00+08:00",
+  "nextRunAt": "2026-03-26T16:35:00+08:00",
+  "blockers": [],
+  "childStates": {
+    "spec": "done",
+    "frontend": "doing",
+    "backend": "waiting_external",
+    "qa": "queued",
+    "rollup": "doing"
+  },
+  "artifacts": [
+    {
+      "kind": "spec",
+      "path": "artifacts/spec/spec.md"
+    }
+  ]
+}

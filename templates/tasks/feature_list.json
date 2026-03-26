@@ -1,0 +1,45 @@
+[
+  {
+    "id": "SPEC-001",
+    "area": "spec",
+    "title": "输出 spec、feature graph 与 acceptance",
+    "owner": "spock",
+    "dependsOn": [],
+    "status": "queued",
+    "passes": false
+  },
+  {
+    "id": "FE-001",
+    "area": "frontend",
+    "title": "任务看板显示 doing / blocked / stale / done",
+    "owner": "sulu",
+    "dependsOn": [
+      "SPEC-001"
+    ],
+    "status": "queued",
+    "passes": false
+  },
+  {
+    "id": "BE-001",
+    "area": "backend",
+    "title": "提供 root task 状态查询接口",
+    "owner": "laforge",
+    "dependsOn": [
+      "SPEC-001"
+    ],
+    "status": "queued",
+    "passes": false
+  },
+  {
+    "id": "QA-001",
+    "area": "qa",
+    "title": "验证前后端状态一致与回归风险",
+    "owner": "worf",
+    "dependsOn": [
+      "FE-001",
+      "BE-001"
+    ],
+    "status": "queued",
+    "passes": false
+  }
+]

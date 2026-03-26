@@ -1,6 +1,6 @@
 # ROLLUP
 
-生成时间: 2026-03-26T11:24:56Z
+生成时间: 2026-03-26T11:56:09Z
 
 ## 概览
 - 任务总数: 5
@@ -23,4 +23,4 @@
 - worf: 0
 
 ## Root Tasks
-- `task_b199e936bc92` [done] OpenClaw Task Runtime v1 | owner: picard | next: spec
+- `task_ce4fa4b2bb42` [done] OpenClaw Task Runtime v1 | owner: picard | next: spec

@@ -1,0 +1,26 @@
+{
+  "from": "spock",
+  "to": "sulu",
+  "mode": "delegate",
+  "featureId": "FE-001",
+  "inputArtifacts": [
+    "artifacts/spec/spec.md",
+    "artifacts/spec/ui-contract.md"
+  ],
+  "expectedOutput": [
+    "frontend patch or PR ref",
+    "board screenshot",
+    "updated feature status"
+  ],
+  "acceptance": [
+    "board shows lifecycleState",
+    "board shows freshnessState",
+    "board shows lastProgressAt"
+  ],
+  "doNotChange": [
+    "acceptance.json",
+    "backend contract fields"
+  ],
+  "returnTo": "worf",
+  "dueAt": "2026-03-28T18:00:00+08:00"
+}

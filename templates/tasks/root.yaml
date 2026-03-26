@@ -1,0 +1,19 @@
+rootTaskId: EPIC-YYYY-NNN
+title: 示例 Epic
+owner: picard
+phase: intake
+lifecycleState: queued
+freshnessState: fresh
+currentStep: scaffold initialized
+nextAction: start spec child workflow
+lastProgressAt:
+nextRunAt:
+deadlineAt:
+children:
+  spec: queued
+  frontend: queued
+  backend: queued
+  qa: queued
+  rollup: queued
+latestArtifacts: []
+blockers: []

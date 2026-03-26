@@ -1,0 +1,18 @@
+{
+  "rootTaskId": "EPIC-YYYY-NNN",
+  "releaseGate": {
+    "required": [
+      "spec approved",
+      "frontend passing",
+      "backend passing",
+      "qa pass",
+      "status projection working"
+    ]
+  },
+  "featureRules": {
+    "mustHaveArtifacts": true,
+    "mustHaveEvidence": true,
+    "e2eRequiredForUI": true,
+    "ciRequiredForBackend": true
+  }
+}
