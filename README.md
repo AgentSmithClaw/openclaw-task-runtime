@@ -1,170 +1,154 @@
-# OpenClaw Task Runtime
+# 🧭 openclaw-task-runtime
 
-> Harness-first task control plane for multi-agent execution in OpenClaw.
+<div align="center">
 
-`openclaw-task-runtime` 是一个面向 **OpenClaw 多 Agent 持续任务系统** 的最小可交付 runtime。  
-它的目标不是再做一个聊天机器人，而是把多 Agent 协作从“群聊推进”升级成“任务对象驱动”。
+[![Runtime](https://img.shields.io/badge/runtime-Python-3776ab.svg)](#)
+[![Storage](https://img.shields.io/badge/storage-SQLite-003b57.svg)](#)
+[![Type](https://img.shields.io/badge/type-Task%20Runtime-0f766e.svg)](#)
 
----
+**一个面向 OpenClaw 多 Agent 持续任务系统的任务控制面 runtime**
 
-## 1. 项目背景
+把任务状态、handoff、调度、投影和监督能力从聊天记录中抽离出来，沉到统一的 runtime 与状态机里。
 
-在传统的多 Agent 协作里，经常会遇到这些问题：
-
-- 任务状态散落在聊天记录中
-- 谁负责、做到哪、卡在哪，没有稳定的 source of truth
-- handoff 靠人肉转述，容易丢上下文
-- supervisor / 主控经常退化成手工调度员
-- heartbeat、cron、群消息被迫承担“状态真相”的职责
-
-这个项目就是为了解决这些问题。
-
-它把多 Agent 系统重构为：
-
-- **Task DB = source of truth**
-- **board / rollup = projection**
-- **heartbeat / cron = scheduler only**
-- **chat / Feishu = notification plane only**
-- **Picard = supervisor / orchestrator，而不是手工调度器**
-
-换句话说：
-
-> 这个项目的本质，是把 OpenClaw 多 Agent 系统从“靠聊天推进任务”，升级成“靠 runtime 推进任务”。
+</div>
 
 ---
 
-## 2. 核心目标
+## 📖 项目简介
 
-`openclaw-task-runtime` 要解决的是：
+`openclaw-task-runtime` 是一个聚焦 **多 Agent 任务对象化与状态机化** 的基础设施项目。
 
-1. **任务对象化**
-   - 每个任务有明确 id、owner、phase、state、parent/root 关系
+很多多 Agent 协作系统的真实问题，不是“Agent 不够多”，而是：
 
-2. **状态机化**
-   - 任务状态通过 event 驱动，而不是靠聊天猜测
+- 任务状态散落在聊天记录里
+- 谁负责、做到哪、卡在哪没有稳定 source of truth
+- handoff 依赖人工转述，容易丢上下文
+- board 和 rollup 只是人工整理结果，不是 runtime projection
+- supervisor 被迫退化成手工调度员
 
-3. **可观察化**
-   - 可以直接看到 registry、work board、rollup、status card
+这个项目的目标，就是把 OpenClaw 多 Agent 协作从 **聊天推进** 升级为 **runtime 推进**。
 
-4. **handoff 结构化**
-   - agent 之间的交接有明确 contract，而不是口头描述
+核心原则包括：
 
-5. **可升级化**
-   - 当前先用 SQLite / 本地 runtime 跑通，未来可迁移到 Temporal durable runtime
-
----
-
-## 3. 当前已实现能力（v1）
-
-当前仓库已经达到 **v1 最小可交付版**。
-
-### Phase 1：最小 runtime 骨架
-- task create / list / show
-- task event log
-- lifecycle state machine v1
-- registry projection
-- work board projection
-- rollup projection
-
-### Phase 2：执行桥起步能力
-- dispatcher（scan & claim queued tasks）
-- structured result ingest（agent bridge）
-- handoff runtime（delegate / transfer / review / escalate）
-- supervisor（stale / blocked / dependency / status card）
-
-### Phase 3：最小闭环链
-当前已经保留一条最小任务链示例：
-- root task
-- spec
-- frontend
-- backend
-- QA
-- rollup
-
-### Phase 4：增强层起步
-- supervisor 规则起步版
-- status card / rollup 基础结构
-- 为后续 Uhura collector / migration / durable runtime 留出边界
+- `Task DB = source of truth`
+- `board / rollup = projection`
+- `heartbeat / cron = scheduler only`
+- `chat / Feishu = notification plane only`
+- `supervisor = orchestrator, not manual dispatcher`
 
 ---
 
-## 4. 部署后会是什么效果
+## ✨ 功能特性
 
-项目跑起来之后，你得到的不是“一堆脚本”，而是一套 **任务控制面 + 状态机 + 看板 + handoff + 汇总能力**。
-
-### 你会直接看到
-- 当前有哪些任务
-- 每个任务是谁负责
-- 每个任务在哪个 phase
-- 当前在 doing / blocked / done 哪个状态
-- 哪个任务有 blocker
-- 哪些 child task 还没完成
-- 当前总览 rollup 是什么样
-
-### 你会感受到的变化
-
-#### 以前
-- 靠聊天推进
-- 靠群里追进度
-- 靠记忆或人工翻记录判断任务状态
-
-#### 之后
-- 任务状态沉到 DB
-- handoff 变成结构化对象
-- board / rollup 可直接看
-- Picard 更像真正的 orchestrator
-- 多 Agent 协作更像流水线，而不是群聊工地
-
-一句话：
-
-> 部署后，这套系统会把 OpenClaw 多 Agent 协作从“聊天式推进”升级成“runtime 驱动推进”。
+- 🗂️ **任务对象化** - 每个任务都有 id、owner、phase、root / parent 关系
+- 🔄 **生命周期状态机** - 基于 event 驱动任务状态迁移
+- 📋 **投影物化** - 自动生成 registry、work board、rollup 等视图
+- 🚚 **dispatcher** - 扫描 queued task 并执行 claim / lease
+- 📥 **structured ingest** - 接收 agent 结构化结果并写入 runtime
+- 🤝 **handoff runtime** - 支持 delegate / transfer / review / escalate
+- 👀 **supervisor** - 检查 stale、blocked、依赖关系并生成 status card
+- 🧱 **边界清晰** - 为后续 durable runtime / Temporal 迁移预留结构边界
 
 ---
 
-## 5. 目录结构
+## 🎯 适用场景
 
-```text
+- 多 Agent 持续协作任务编排
+- 需要状态机和任务投影的执行系统
+- handoff 频繁、角色明确的协作流程
+- 从实验型 Agent 系统向工程化 runtime 演进的项目
+
+---
+
+## 📁 目录结构
+
+```bash
 openclaw-task-runtime/
-├─ config/              # runtime / policy / openclaw / temporal 配置
-├─ data/                # runtime.db（source of truth）
-├─ docker/              # Temporal 本地开发示例
-├─ env/                 # 环境变量示例
-├─ runtime/
-│  ├─ boards/           # WORK-BOARD / ROLLUP
-│  ├─ events/           # 按天 jsonl 事件日志
-│  └─ tasks/            # registry projection
-├─ schemas/             # task state / agent result / handoff schema
-├─ sql/                 # task control plane DDL
-├─ src/openclaw_task_runtime/
-│  ├─ runtime_v1.py     # 核心 runtime / state machine / projection / CLI
-│  ├─ dispatcher.py     # queued task dispatch
-│  ├─ agent_bridge.py   # structured result ingest
-│  ├─ handoff.py        # handoff runtime
-│  └─ supervisor.py     # stale / blocked / status card
-├─ templates/           # task / report 模板
-├─ README-LOCAL-START.md
-└─ IMPLEMENTATION-NEXT-STEPS.md
+├── config/                     # runtime / policy / openclaw / temporal 配置
+├── data/                       # runtime.db
+├── docker/                     # Temporal 本地开发示例
+├── env/                        # 环境变量示例
+├── runtime/
+│   ├── boards/                 # WORK-BOARD / ROLLUP
+│   ├── events/                 # 每日事件日志
+│   └── tasks/                  # registry projection
+├── schemas/                    # task / handoff / agent result schema
+├── sql/                        # 控制面 DDL
+├── src/openclaw_task_runtime/
+│   ├── runtime_v1.py           # 核心 runtime / CLI / state machine
+│   ├── dispatcher.py           # queued task dispatch
+│   ├── agent_bridge.py         # structured result ingest
+│   ├── handoff.py              # handoff runtime
+│   └── supervisor.py           # stale / blocked / status card
+├── templates/                  # task / report 模板
+├── README-LOCAL-START.md
+└── README.md
 ```
 
 ---
 
-## 6. 快速开始
+## 🛠️ 技术栈
 
-### 初始化 runtime
+| 模块 | 技术 |
+|------|------|
+| Runtime | Python |
+| 状态存储 | SQLite |
+| 配置 | YAML |
+| 数据交换 | JSON / JSON Schema |
+| 投影输出 | Markdown + JSON |
+| 调度边界 | Dispatcher / Cron / Supervisor |
+| 后续扩展 | Temporal-ready architecture |
+
+---
+
+## 🧱 当前已实现内容
+
+### 第一阶段（已完成）
+- [x] task create / list / show
+- [x] event log 与 lifecycle state machine v1
+- [x] registry / board / rollup projection
+- [x] dispatcher scan + claim 机制
+- [x] structured agent result ingest
+- [x] handoff runtime 起步版
+- [x] supervisor stale / blocked / dependency / status card
+- [x] 最小闭环任务链示例
+
+### 当前 MVP 能力
+- 用 SQLite 保存任务 source of truth
+- 用 event 驱动 lifecycle state 变化
+- 用 projection 物化给人读的 board / rollup
+- 用 dispatcher / supervisor 衔接执行与观察能力
+- 为后续外部执行桥和 durable runtime 演进保留接口
+
+---
+
+## 🚀 快速开始
+
+### 1）安装最小依赖
 
 ```bash
-cd /home/baiyuxi/.openclaw/workspace/openclaw-task-runtime
+git clone https://github.com/AgentSmithClaw/openclaw-task-runtime.git
+cd openclaw-task-runtime
+
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install pyyaml
+```
+
+### 2）初始化 runtime
+
+```bash
 PYTHONPATH=src python3 -m openclaw_task_runtime init
 ```
 
-### 查看当前任务和投影
+### 3）查看任务和投影
 
 ```bash
 PYTHONPATH=src python3 -m openclaw_task_runtime list-tasks
 PYTHONPATH=src python3 -m openclaw_task_runtime board
 ```
 
-### 创建任务
+### 4）创建任务并追加事件
 
 ```bash
 PYTHONPATH=src python3 -m openclaw_task_runtime create-task \
@@ -172,106 +156,65 @@ PYTHONPATH=src python3 -m openclaw_task_runtime create-task \
   --owner picard \
   --requested-by user \
   --phase intake
-```
 
-### 追加事件
-
-```bash
 PYTHONPATH=src python3 -m openclaw_task_runtime append-event \
   --task-id <task_id> \
   --actor picard \
   --event-type progress \
-  --summary "working on spec"
+  --summary "Phase 1 in progress"
 ```
 
-### 调度 queued task
+### 5）运行调度与监督
 
 ```bash
 PYTHONPATH=src python3 -m openclaw_task_runtime dispatch --lease-owner dispatcher
-```
-
-### 写入结构化结果
-
-```bash
-PYTHONPATH=src python3 -m openclaw_task_runtime ingest \
-  --result '{"taskId":"<task_id>","agent":"picard","decision":"done","summary":"completed"}'
-```
-
-### 处理 handoff
-
-```bash
-PYTHONPATH=src python3 -m openclaw_task_runtime handoff create \
-  --task-id <task_id> \
-  --mode delegate \
-  --from picard \
-  --to spock
-```
-
-### 查看 supervisor 状态卡
-
-```bash
 PYTHONPATH=src python3 -m openclaw_task_runtime supervisor --status-card
 ```
 
-更完整的本地运行说明见：
-- [`README-LOCAL-START.md`](./README-LOCAL-START.md)
+更多本地启动细节见：
 
----
-
-## 7. 最值得看的文件
-
-如果你第一次看这个项目，建议按这个顺序：
-
-### 看结果
-- `runtime/tasks/registry.json`
-- `runtime/boards/WORK-BOARD.md`
-- `runtime/boards/ROLLUP.md`
-
-### 看核心逻辑
-- `src/openclaw_task_runtime/runtime_v1.py`
-- `src/openclaw_task_runtime/dispatcher.py`
-- `src/openclaw_task_runtime/agent_bridge.py`
-- `src/openclaw_task_runtime/handoff.py`
-- `src/openclaw_task_runtime/supervisor.py`
-
-### 看项目说明
 - `README-LOCAL-START.md`
-- `IMPLEMENTATION-NEXT-STEPS.md`
 
 ---
 
-## 8. 当前状态与后续路线
+## 🗺️ 路线图
 
-### 当前状态
-当前仓库已经达到：
-- **v1 最小可交付 runtime**
-- **有稳定最小闭环链**
-- **有统一 CLI 与投影结果**
+### 第二阶段（进行中）
+- [ ] 增强 retry、lease recovery 和 watchdog 机制
+- [ ] 深化 OpenClaw 外部执行桥
+- [ ] 完善 handoff contract 与结果结构
+- [ ] 丰富 board / rollup / status card 的可观察性
 
-### 后续增强项
-后续更适合继续做的是：
-1. reconciler / watchdog（lease recovery）
-2. 更完整的 retry / stale / blocked 规则
-3. 更深的 OpenClaw 执行桥接线
-4. Temporal durable runtime
-5. Uhura collector / 更完整 status card
-
-也就是说：
-
-> 当前阶段已经不是“能不能跑”，而是“如何继续稳定化与升级”。
+### 第三阶段（规划中）
+- [ ] 向 durable runtime 形态演进
+- [ ] 更完整接入 Temporal
+- [ ] 建立更强的自动恢复与调度治理能力
+- [ ] 将多 Agent 协作升级为更稳定的工程化任务系统
 
 ---
 
-## 9. 适用场景
+## 💡 产品方向
 
-这个项目适合：
-- OpenClaw 多 Agent 协作系统
-- 需要 task control plane 的 agent runtime
-- 想把群聊推进升级为任务驱动推进
-- 想先在本地 / SQLite 跑通，再逐步演进到 durable runtime
+这个项目不是另一个聊天机器人，而是一个偏 **多 Agent 任务基础设施** 的 runtime。
+
+核心想表达的能力包括：
+
+- 把任务状态从聊天记录中抽离出来
+- 把协作关系、handoff 和调度做成结构化对象
+- 让 supervisor 真正基于 runtime 做决策
+- 为复杂多 Agent 系统提供可持续演进的控制面
 
 ---
 
-## 10. 一句话总结
+## 📌 当前状态
 
-> `openclaw-task-runtime` 是 OpenClaw 多 Agent 系统的任务控制面：它把任务状态、handoff、看板、汇总和 supervisor 能力从聊天层抽出来，沉到一个可运行、可观察、可升级的 runtime 中。
+当前已经具备 **v1 最小可交付 runtime** 的骨架，能够支撑任务创建、状态迁移、投影生成、handoff 和 supervisor 检查。  
+下一步重点，是把它从本地可运行版本继续推向更稳定的 durable runtime 形态。
+
+---
+
+<div align="center">
+
+Made for multi-agent orchestration, structured handoffs, and runtime-driven execution.
+
+</div>
